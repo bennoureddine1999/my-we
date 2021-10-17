@@ -1,0 +1,22 @@
+.logincard {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 8rem;
+  margin-bottom: 2rem;
+  width: 30%;
+  border-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px,
+    rgba(0, 0, 0, 0.22) 0px 15px 12px;
+}
+.login {
+  text-align: center;
+  padding-top: 1.3rem;
+  color: rgba(14, 82, 184, 0.425);
+}
+.loginbutton {
+  margin-left: auto;
+  margin-right: auto;
+  width: 40%;
+  margin-bottom: -1rem;
+  border-radius: 10px;
+}

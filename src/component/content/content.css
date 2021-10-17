@@ -1,0 +1,68 @@
+.content {
+  position: relative;
+}
+.fistpart {
+  display: flex;
+  justify-content: start;
+  width: 40%;
+  border: solid gray 1px;
+  margin-right: auto;
+  margin-left: auto;
+  border-radius: 8px;
+  background-color: white;
+  position: relative;
+  margin-top: -3.5rem;
+}
+
+.scondpart {
+  border-radius: 10px;
+  background-color: white;
+  margin-top: -3.5rem;
+  border: solid gray 1px;
+  width: 50%;
+  margin-right: auto;
+  margin-left: auto;
+  padding-top: 3rem;
+}
+.imgRent {
+  position: relative;
+  left: 35%;
+  margin-top: 0.5rem;
+  width: 2.7rem;
+}
+.paragraph3 {
+  margin-top: 0rem;
+  margin-bottom: 0rem;
+  text-align: center;
+}
+.imgSale {
+  position: relative;
+  left: 35%;
+  margin-top: 0.5rem;
+
+  width: 2.7rem;
+}
+.paragraph2 {
+  margin-top: 0rem;
+  margin-bottom: 0rem;
+  text-align: center;
+}
+.imghotel {
+  position: relative;
+  left: 35%;
+  width: 2.7rem;
+  margin-top: 0.5rem;
+}
+.paragraph1 {
+  margin-top: 0rem;
+  margin-bottom: 0rem;
+  text-align: center;
+}
+.bluebutton {
+  border-bottom: solid blue 3px;
+  filter: invert(46%) sepia(82%) saturate(3961%) hue-rotate(184deg)
+    brightness(105%) contrast(104%);
+}
+.withbutton {
+  color: black;
+}

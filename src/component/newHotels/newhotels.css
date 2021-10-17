@@ -1,0 +1,22 @@
+.newhotelsCard {
+  margin-top: 5rem;
+  margin-left: auto;
+  margin-right: auto;
+  border: solid 2px black;
+  width: 80%;
+}
+.imagescadr {
+  height: 6.5rem;
+  margin-left: 1rem;
+}
+.imagesbar {
+  display: flex;
+  border: solid 1px black;
+  height: 8rem;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.boxes {
+  margin-left: 2rem;
+}
