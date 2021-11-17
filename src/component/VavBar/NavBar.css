@@ -1,12 +1,12 @@
 .navbar {
   display: flex;
   justify-content: space-between;
-  border: solid 2px black;
-  margin-top: 3rem;
+  background-color: white;
+  border-bottom: solid 2px rgb(158, 155, 155);
+  overflow: hidden;
 }
 
 .logodiv {
-  border: solid 2px black;
   margin-left: 3rem;
   border-radius: 3px;
 }
@@ -14,11 +14,14 @@
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-  border: solid 2px black;
-  margin-right: 3rem;
+  margin-right: 2rem;
+  margin-top: 0.7rem;
   padding-left: 0px;
+  margin-bottom: 0.1rem;
 }
 .listcontent {
   list-style: none;
-  padding-left: 1rem;
+}
+.logindiv {
+  padding-left: 0px;
 }

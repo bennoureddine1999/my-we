@@ -6,18 +6,19 @@ import axios from "axios";
 import { Formik } from "formik";
 import * as yup from "yup";
 import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
 import { ToastContainer, toast } from "react-toastify";
+import { LOGIN } from "../../action/action";
 
 import Stack from "@mui/material/Stack";
-// import AdapterDateFns from "@date-io/date-fns";
-// import LocalizationProvider from "@mui/lab/LocalizationProvider";
-// import DatePicker from "@mui/lab/DatePicker";
 
-function LogIn(props) {
+function LogIn() {
+  const dispatch = useDispatch();
   const [USERS, setUSERS] = useState();
   const [Laoding, setLaoding] = useState(true);
   const [ERROR, setERROR] = useState(false);
+  const userlogin = useSelector((state) => state.userlogin);
 
   useEffect(() => {
     const getdata = async () => {
@@ -59,11 +60,20 @@ function LogIn(props) {
                 password: values.password,
               }
             );
-            props.setLogin(true);
             const loginuser = await USERS.find(
               (user) => user.email == values.email
             );
-            console.log(loginuser);
+
+            dispatch(
+              LOGIN({
+                email: values.email,
+                login: true,
+              })
+            );
+            //console.log("dispatched");
+            //console.log(loginuser);
+            //console.log(userlogin.login);
+
             window.location = "/";
           } catch (error) {
             console.log("error");

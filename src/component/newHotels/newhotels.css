@@ -1,12 +1,7 @@
 .newhotelsCard {
-  margin-top: 5rem;
-  margin-left: auto;
-  margin-right: auto;
-  border: solid 2px black;
-  width: 80%;
+  background-color: white;
 }
 .imagescadr {
-  height: 6.5rem;
   margin-left: 1rem;
 }
 .imagesbar {
@@ -19,4 +14,7 @@
 }
 .boxes {
   margin-left: 2rem;
+}
+.image-item {
+  width: 7rem;
 }

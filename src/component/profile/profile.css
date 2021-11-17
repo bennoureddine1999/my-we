@@ -1,0 +1,17 @@
+.card {
+  width: 60%;
+  margin-left: auto;
+  margin-right: auto;
+  height: 100vh;
+  margin-top: 3rem;
+  margin-bottom: 2rem;
+  border-radius: 10px;
+}
+.circle {
+  border-radius: 50%;
+  border: solid 1px black;
+  width: 23%;
+  height: 30vh;
+  margin-left: auto;
+  margin-right: auto;
+}

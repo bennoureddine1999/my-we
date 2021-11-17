@@ -51,10 +51,14 @@ function SignUp() {
         initialValues={{
           name: "",
           username: "",
-          age: "",
+          age: " ",
           email: "",
           password: "",
           phone: "",
+          photo: " ",
+          gender: " ",
+          dateofbirth: " ",
+          photobackground: " ",
         }}
         validationSchema={Yop.object().shape({
           name: Yop.string().required(),
@@ -75,13 +79,15 @@ function SignUp() {
               email: values.email,
               phone: values.phone,
               password: values.password,
-              // age: values.age,
-              // gender: values.gender,
+              age: values.age,
+              gender: values.gender,
+              photo: values.photo,
+              dateofbirth: values.dateofbirth,
             });
 
             setLaoding2(false);
             toast.success("users created");
-            // window.location = "./logIN";
+            window.location = "./logIN";
           } catch (error) {
             setLaoding2(false);
             toast.error("this email alredy ");

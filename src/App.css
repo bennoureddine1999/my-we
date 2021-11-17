@@ -1,8 +1,9 @@
 .slideshow {
-  height: auto;
   width: 100%;
 }
-
+body {
+  background-color: white;
+}
 .App {
   text-align: center;
 }

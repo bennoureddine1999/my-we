@@ -4,14 +4,14 @@
 .fistpart {
   display: flex;
   justify-content: start;
-  width: 40%;
+  width: 45%;
   border: solid gray 1px;
   margin-right: auto;
   margin-left: auto;
   border-radius: 8px;
   background-color: white;
   position: relative;
-  margin-top: -3.5rem;
+  margin-top: -6rem;
 }
 
 .scondpart {
@@ -19,10 +19,11 @@
   background-color: white;
   margin-top: -3.5rem;
   border: solid gray 1px;
-  width: 50%;
+  width: 55%;
   margin-right: auto;
   margin-left: auto;
-  padding-top: 3rem;
+  padding-top: 4rem;
+  padding-right: 0px;
 }
 .imgRent {
   position: relative;
