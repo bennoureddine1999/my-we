@@ -10,6 +10,9 @@ import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import { useSelector } from "react-redux";
 
+import { ref, uploadBytesResumable, getDownloadURL } from "@firebase/storage";
+import { storage } from "../../fire-base";
+
 import appartementForRent from "./appartement for rent.css";
 import { useState, useEffect } from "react";
 import { ToastContainer, Toast, toast } from "react-toastify";
@@ -20,23 +23,45 @@ import Joi, { object } from "joi";
 import * as yup from "yup";
 import { useHistory, useRouterMatch } from "react-router-dom";
 
+import IconButton from "@mui/material/IconButton";
+import PhotoCamera from "@material-ui/icons/PhotoCamera";
+import DeleteIcon from "@material-ui/icons/Delete";
+import Donebutton from "../../image/check.png";
+import edit from "../../image//edit.png";
+import { styled } from "@mui/material/styles";
+
 function AppartementForRent_D() {
   const [A_F_R_D, setA_F_R_D] = useState();
   const [Laoding, setLaoding] = useState(true);
+  const [Province, setProvince] = useState();
+
   const [ERROR, setERROR] = useState(false);
   const [Laoding2, setLaoding2] = useState(false);
   const [classpost, setClasspost] = useState("");
-  const [picture, setPicture] = useState();
+  // const [picture, setPicture] = useState();
   const [loginuserID, setLoginuserID] = useState();
+
+  const [images, setImages] = useState([]);
+  const [progress, setProgress] = useState(0);
+  const [urls, setUrls] = useState([]);
+  const [selectedImage, setSelactedImage] = useState([]);
+  const [buttonsubmit, setButtonsubmit] = useState(false);
+  const [editbutton, setEditbutton] = useState(false);
+  const [inputbutton, setInputbutton] = useState(true);
+  console.log("urls", urls);
+  console.log("images", images);
+  const Input = styled("input")({
+    display: "none",
+  });
 
   const userlogin = useSelector((state) => state.userlogin);
   const email = userlogin.email;
   console.log("loginuserID", loginuserID);
 
-  const handlePhoto = (e) => {
-    console.log(e.target.files[0]);
-    setPicture(e.target.files[0]);
-  };
+  // const handlePhoto = (e) => {
+  //   console.log(e.target.files[0]);
+  //   setPicture(e.target.files[0]);
+  // };
 
   const province = [
     "01- Adrar",
@@ -89,6 +114,79 @@ function AppartementForRent_D() {
     "48- Relizane",
   ];
 
+  const handlechange = (e) => {
+    if (e.target.files) {
+      const fileArray = Array.from(e.target.files).map((file) =>
+        URL.createObjectURL(file)
+      );
+      console.log(fileArray);
+      setSelactedImage((prevImages) => prevImages.concat(fileArray));
+      Array.from(e.target.files).map((file) => URL.revokeObjectURL(file));
+    }
+
+    for (let i = 0; i < e.target.files.length; i++) {
+      const newImage = e.target.files[i];
+      newImage["id"] = Math.random();
+
+      setImages((prevState) => [...prevState, newImage]);
+      console.log("images", images);
+    }
+    setButtonsubmit(true);
+  };
+  const renderPhotos = (source) => {
+    // console.log("source: ", source);
+    return source.map((photo) => {
+      return (
+        <img
+          style={{
+            height: "97%",
+            marginLeft: "2rem",
+            height: "8rem",
+          }}
+          src={photo}
+          alt=""
+          key={photo}
+        />
+      );
+    });
+  };
+  const upladefile = () => {
+    const promises = [];
+    images.map((image) => {
+      const storageRef = ref(storage, `/files/${image.id}`);
+      const uplaodeTask = uploadBytesResumable(storageRef, image);
+      promises.push(uplaodeTask);
+      uplaodeTask.on(
+        "state_changed",
+        (snapshot) => {
+          const prog = Math.round(
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+          );
+          setProgress(prog);
+        },
+        (err) => {
+          console.log(err);
+        },
+        () => {
+          getDownloadURL(uplaodeTask.snapshot.ref).then((urls) => {
+            console.log("urls", urls);
+            setUrls((prevState) => [...prevState, urls]);
+          });
+        }
+      );
+      setButtonsubmit(false);
+      setEditbutton(true);
+      setInputbutton(false);
+    });
+  };
+  const handleedit = () => {
+    setUrls([]);
+    setImages([]);
+    setSelactedImage([]);
+    setEditbutton(false);
+    setInputbutton(true);
+  };
+
   useEffect(() => {
     const getdata = async () => {
       try {
@@ -117,7 +215,7 @@ function AppartementForRent_D() {
       <Formik
         initialValues={{
           title: "",
-          photo: "",
+          // photo: "",
           province: "",
           city: "",
           liste: "",
@@ -132,7 +230,7 @@ function AppartementForRent_D() {
         validationSchema={yup.object().shape({
           title: yup.string().required(),
           // photo: yup.string().required(),
-          province: yup.string().required(),
+          // province: yup.string().required(),
           city: yup.string().required(),
           liste: yup.string().required(),
           prix: yup.number().required(),
@@ -150,8 +248,11 @@ function AppartementForRent_D() {
               dataForm.append(value, values[value]);
             }
             dataForm.append("userloginID", loginuserID);
+            for (let photo in urls) {
+              dataForm.append("photo", urls[photo]);
+            }
+            dataForm.append("province", Province);
 
-            dataForm.append("photo", picture);
             const response = await axios.post(
               "http://localhost:7000/AppartementForRent_D",
               dataForm,
@@ -180,7 +281,7 @@ function AppartementForRent_D() {
         }) => {
           return (
             <form onSubmit={handleSubmit}>
-              <form>
+              {/* <form>
                 <input
                   type="file"
                   id="myFile"
@@ -188,7 +289,7 @@ function AppartementForRent_D() {
                   onChange={handlePhoto}
                   onBlur={handleBlur}
                 />
-              </form>
+              </form> */}
               {/* <Box
                 className="boxes"
                 component="form"
@@ -208,87 +309,89 @@ function AppartementForRent_D() {
                   value={values.photo}
                 />
               </Box> */}
-              {/* <div className="App">
-                  <ImageUploading
-                    multiples
-                    name="photo"
-                    value={values.photo}
-                    //value={images}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    onChange={onChange}
-                    maxNumber={maxNumber}
-                    dataURLKey="data_url"
-                  >
-                    {({
-                      imageList,
-                      onImageUpload,
-                      onImageRemoveAll,
-                      onImageUpdate,
-                      onImageRemove,
-                      isDragging,
-                      dragProps,
-                    }) => (
-                      // write your building UI
-                      <Box className="upload__image-wrapper">
-                        <div className="imagesbar">
-                          {imageList.map((image, index) => (
-                            <div key={index} className="image-item">
-                              <div className="imagescadr">
-                                {" "}
-                                <img
-                                  src={image["data_url"]}
-                                  alt=""
-                                  style={{ width: "100%", height: "100%" }}
-                                />
-                              </div>
-                              <div className="image-item__btn-wrapper">
-                                <img
-                                  style={{
-                                    filter:
-                                      "invert(51%) sepia(0%) saturate(1042%) hue-rotate(285deg) brightness(93%) contrast(102%)",
-                                    width: "1.6rem",
-                                  }}
-                                  src={edit}
-                                  onClick={() => onImageUpdate(index)}
-                                />
+              <div
+                style={{
+                  border: "solid 1px black",
+                  marginTop: "3rem",
+                  width: "90%",
+                  marginLeft: "auto",
+                  marginRight: "auto",
+                  borderRadius: "12px",
+                  minHeight: "8rem",
+                }}
+              >
+                {renderPhotos(selectedImage)}
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                {inputbutton ? (
+                  <label htmlFor="icon-button-file">
+                    <Input
+                      multiple
+                      onChange={handlechange}
+                      accept="image/*"
+                      id="icon-button-file"
+                      type="file"
+                    />
+                    <IconButton
+                      color="primary"
+                      aria-label="upload picture"
+                      component="span"
+                    >
+                      <PhotoCamera />
+                    </IconButton>
+                  </label>
+                ) : (
+                  false
+                )}
 
-                                <img
-                                  style={{
-                                    filter:
-                                      " invert(27%) sepia(85%) saturate(1534%) hue-rotate(350deg) brightness(99%) contrast(87%)",
-                                    width: "1.6rem",
-                                    marginLeft: "1rem",
-                                  }}
-                                  src={delet}
-                                  onClick={() => onImageRemove(index)}
-                                />
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                        <IconButton
-                          color="primary"
-                          aria-label="upload picture"
-                          component="span"
-                        >
-                          <PhotoCamera
-                            style={isDragging ? { color: "red" } : undefined}
-                            onClick={onImageUpload}
-                            {...dragProps}
-                          />
-                        </IconButton>
-                        &nbsp;
-                        <IconButton
-                          aria-label="delete"
-                          onClick={onImageRemoveAll}
-                        >
-                          <DeleteIcon />
-                        </IconButton>
-                      </Box>
-                    )}
-                  </ImageUploading>
-                </div> */}
+                {buttonsubmit ? (
+                  <>
+                    <IconButton
+                      aria-label="delete"
+                      style={{ marginLeft: "1rem" }}
+                      onClick={() => {
+                        setUrls([]);
+                        setImages([]);
+                        setSelactedImage([]);
+                        setButtonsubmit(false);
+                      }}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                    <IconButton style={{ marginLeft: "1rem" }}>
+                      <img
+                        src={Donebutton}
+                        style={{ width: "1.5rem" }}
+                        onClick={upladefile}
+                      />
+                    </IconButton>
+                  </>
+                ) : (
+                  false
+                )}
+
+                {editbutton ? (
+                  <IconButton style={{ marginLeft: "1rem" }}>
+                    <img
+                      style={{
+                        filter:
+                          "invert(51%) sepia(0%) saturate(1042%) hue-rotate(285deg) brightness(93%) contrast(102%)",
+                        width: "1.6rem",
+                      }}
+                      src={edit}
+                      onClick={handleedit}
+                    />
+                  </IconButton>
+                ) : (
+                  false
+                )}
+              </div>
               <div style={{ display: "flex" }}>
                 <div>
                   <Box
@@ -383,15 +486,18 @@ function AppartementForRent_D() {
                       noValidate
                       autoComplete="off"
                     >
-                      {errors.province && touched.province && (
+                      {/* {errors.province && touched.province && (
                         <div>{errors.province}</div>
-                      )}
+                      )} */}
 
                       <Autocomplete
                         className="autocomplete"
                         disablePortal
                         id="combo-box-demo"
                         options={province}
+                        onChange={(event, value) => {
+                          setProvince(value);
+                        }}
                         // value={values.province}
                         sx={{ width: 300 }}
                         renderInput={(params) => (
@@ -399,9 +505,9 @@ function AppartementForRent_D() {
                             {...params}
                             label="province"
                             name="province"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            value={values.province}
+                            // onChange={handleChange}
+                            // onBlur={handleBlur}
+                            // value={values.province}
                           />
                         )}
                       />

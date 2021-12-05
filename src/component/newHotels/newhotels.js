@@ -4,12 +4,15 @@ import newhotels from "./newhotels.css";
 import { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { useSelector } from "react-redux";
+import { ref, uploadBytesResumable, getDownloadURL } from "@firebase/storage";
+import { storage } from "../../fire-base";
 
 import ImageUploading from "react-images-uploading";
 import Navbar from "../VavBar/NavBar";
 import delet from "../../image/clear.png";
 import edit from "../../image//edit.png";
 import Autocomplete from "@mui/material/Autocomplete";
+import Donebutton from "../../image/check.png";
 
 import { Formik } from "formik";
 import * as yup from "yup";
@@ -22,15 +25,17 @@ import { styled } from "@mui/material/styles";
 import IconButton from "@mui/material/IconButton";
 import PhotoCamera from "@material-ui/icons/PhotoCamera";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { NaturePeopleSharp } from "@material-ui/icons";
+import CircularProgress from "@mui/material/CircularProgress";
 
 function Hotels(props) {
   const [Hotels, setHotels] = useState();
   const [loginuserID, setLoginuserID] = useState();
+  const [Province, setProvince] = useState();
   const [Laoding, setLoiding] = useState(true);
   const [ERROR, setERROR] = useState(false);
   const [Laoding2, setLaoding2] = useState(false);
-  const [picture, setPicture] = useState();
+  // const [picture, setPicture] = useState();
+  const [laodingimage, setLaodingimage] = useState(false);
 
   const userlogin = useSelector((state) => state.userlogin);
   const email = userlogin.email;
@@ -38,10 +43,7 @@ function Hotels(props) {
   const Input = styled("input")({
     display: "none",
   });
-  const handlePhoto = (e) => {
-    console.log(e.target.files[0]);
-    setPicture(e.target.files[0]);
-  };
+  console.log("Province", Province);
   const province = [
     "01- Adrar",
     "02- Chlef",
@@ -92,13 +94,92 @@ function Hotels(props) {
     "47- Ghardaïa",
     "48- Relizane",
   ];
-  // const [images, setImages] = React.useState([]);
-  // console.log(images);
-  // const maxNumber = 10;
-  // const onChange = (imageList, addUpdateIndex) => {
-  //   console.log(imageList, addUpdateIndex);
-  //   setImages(imageList);
-  // };
+
+  const [images, setImages] = useState([]);
+  const [progress, setProgress] = useState(0);
+  const [urls, setUrls] = useState([]);
+  const [selectedImage, setSelactedImage] = useState([]);
+  const [buttonsubmit, setButtonsubmit] = useState(false);
+  const [editbutton, setEditbutton] = useState(false);
+  const [inputbutton, setInputbutton] = useState(true);
+  const [deletbutton, setDeletbutton] = useState(false);
+  console.log("urls", urls);
+  console.log("images", images);
+
+  const handlechange = (e) => {
+    if (e.target.files) {
+      const fileArray = Array.from(e.target.files).map((file) =>
+        URL.createObjectURL(file)
+      );
+      console.log(fileArray);
+      setSelactedImage((prevImages) => prevImages.concat(fileArray));
+      Array.from(e.target.files).map((file) => URL.revokeObjectURL(file));
+    }
+
+    for (let i = 0; i < e.target.files.length; i++) {
+      const newImage = e.target.files[i];
+      newImage["id"] = Math.random();
+
+      setImages((prevState) => [...prevState, newImage]);
+      console.log("images", images);
+    }
+    setButtonsubmit(true);
+  };
+  const renderPhotos = (source) => {
+    // console.log("source: ", source);
+    return source.map((photo) => {
+      return (
+        <img
+          style={{
+            height: "97%",
+            marginLeft: "2rem",
+            height: "8rem",
+          }}
+          src={photo}
+          alt=""
+          key={photo}
+        />
+      );
+    });
+  };
+  const upladefile = () => {
+    const promises = [];
+    setLaodingimage(true);
+    images.map((image) => {
+      const storageRef = ref(storage, `/files/${image.name}`);
+      const uplaodeTask = uploadBytesResumable(storageRef, image);
+      promises.push(uplaodeTask);
+      uplaodeTask.on(
+        "state_changed",
+        (snapshot) => {
+          const prog = Math.round(
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+          );
+          setProgress(prog);
+        },
+        (err) => {
+          console.log(err);
+        },
+        () => {
+          getDownloadURL(uplaodeTask.snapshot.ref).then((urls) => {
+            console.log("urls", urls);
+            setUrls((prevState) => [...prevState, urls]);
+          });
+        }
+      );
+      setLaodingimage(false);
+      setButtonsubmit(false);
+      setEditbutton(true);
+      setInputbutton(false);
+    });
+  };
+  const handleedit = () => {
+    setUrls([]);
+    setImages([]);
+    setSelactedImage([]);
+    setEditbutton(false);
+    setInputbutton(true);
+  };
   useEffect(() => {
     const getdata = async () => {
       try {
@@ -126,8 +207,8 @@ function Hotels(props) {
         <Formik
           initialValues={{
             title: "",
-            province: "",
-            photo: "",
+            // province: "",
+            // photo: [],
             city: "",
             liste: "",
             prix: "",
@@ -137,8 +218,9 @@ function Hotels(props) {
           }}
           validationSchema={yup.object().shape({
             title: yup.string().required(),
-            province: yup.string().required(),
-            // photo: yup.string().required(),
+            // province: yup.string().required(),
+            // photo: yup.array().required(),
+            // urls: yup.array(),
             city: yup.string().required(),
             liste: yup.string().required(),
             prix: yup.number().required(),
@@ -153,7 +235,11 @@ function Hotels(props) {
                 dataForm.append(value, values[value]);
               }
 
-              dataForm.append("photo", picture);
+              for (let photo in urls) {
+                dataForm.append("photo", urls[photo]);
+              }
+              // dataForm.append("photo", urls);
+              dataForm.append("province", Province);
 
               dataForm.append("userloginID", loginuserID);
               const response = await axios.post(
@@ -185,15 +271,105 @@ function Hotels(props) {
           }) => {
             return (
               <form onSubmit={handleSubmit} style={{ position: "relative" }}>
-                <form>
+                <div
+                  style={{
+                    border: "solid 1px black",
+                    marginTop: "3rem",
+                    width: "90%",
+                    marginLeft: "auto",
+                    marginRight: "auto",
+                    borderRadius: "12px",
+                    minHeight: "8rem",
+                  }}
+                >
+                  {renderPhotos(selectedImage)}
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  {inputbutton ? (
+                    <label htmlFor="icon-button-file">
+                      <Input
+                        multiple
+                        onChange={handlechange}
+                        accept="image/*"
+                        id="icon-button-file"
+                        type="file"
+                      />
+                      <IconButton
+                        color="primary"
+                        aria-label="upload picture"
+                        component="span"
+                      >
+                        <PhotoCamera />
+                      </IconButton>
+                    </label>
+                  ) : (
+                    false
+                  )}
+
+                  {buttonsubmit ? (
+                    <>
+                      <IconButton
+                        aria-label="delete"
+                        style={{ marginLeft: "1rem" }}
+                        onClick={() => {
+                          setUrls([]);
+                          setImages([]);
+                          setSelactedImage([]);
+                          setButtonsubmit(false);
+                        }}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                      <IconButton style={{ marginLeft: "1rem" }}>
+                        <img
+                          src={Donebutton}
+                          style={{ width: "1.5rem" }}
+                          onClick={upladefile}
+                        />
+                      </IconButton>
+                    </>
+                  ) : (
+                    false
+                  )}
+                  {laodingimage ? (
+                    <Box sx={{ display: "flex", width: "15rem" }}>
+                      <CircularProgress />
+                    </Box>
+                  ) : (
+                    false
+                  )}
+
+                  {editbutton ? (
+                    <IconButton style={{ marginLeft: "1rem" }}>
+                      <img
+                        style={{
+                          filter:
+                            "invert(51%) sepia(0%) saturate(1042%) hue-rotate(285deg) brightness(93%) contrast(102%)",
+                          width: "1.6rem",
+                        }}
+                        src={edit}
+                        onClick={handleedit}
+                      />
+                    </IconButton>
+                  ) : (
+                    false
+                  )}
+                </div>
+                {/* <form>
                   <input
+                    multiple
                     type="file"
-                    id="myFile"
-                    name="photo"
-                    onChange={handlePhoto}
-                    onBlur={handleBlur}
+                    className="input"
+                    onChange={handlechange}
                   />
-                </form>
+                </form> */}
+
                 {/* <Box
                   className="boxes"
                   component="form"
@@ -391,24 +567,29 @@ function Hotels(props) {
                         noValidate
                         autoComplete="off"
                       >
-                        {errors.province && touched.province && (
+                        {/* {errors.province && touched.province && (
                           <div>{errors.province}</div>
-                        )}
+                        )} */}
 
                         <Autocomplete
                           className="autocomplete"
                           disablePortal
                           id="combo-box-demo"
                           options={province}
+                          onChange={(event, value) => {
+                            setProvince(value);
+                          }}
                           sx={{ width: 300 }}
                           renderInput={(params) => (
                             <TextField
                               {...params}
                               label="province"
                               name="province"
-                              onChange={handleChange}
-                              onBlur={handleBlur}
-                              value={values.province}
+
+                              // onChange={handleChange}
+
+                              // onBlur={handleBlur}
+                              // value={values.province}
                             />
                           )}
                         />

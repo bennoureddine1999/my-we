@@ -1,0 +1,31 @@
+.editcard {
+  width: 65%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 3rem;
+  margin-bottom: 2rem;
+  border-radius: 10px;
+  background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.backgrounddiv {
+  border: solid 1px black;
+  min-height: 15rem;
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+}
+/* .inputs {
+  margin-top: 3rem;
+  margin-left: auto;
+} */
+.savebuttondiv {
+  margin-top: 2rem;
+  width: 30%;
+  margin-left: auto;
+  margin-right: 1rem;
+  padding-bottom: 0.9rem;
+}
+.card {
+  width: 50%;
+}

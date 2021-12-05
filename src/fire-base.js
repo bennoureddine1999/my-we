@@ -1,19 +1,19 @@
 import firebase from "firebase/compat/app";
 import { initializeApp } from "firebase/app";
-import firestor from "firebase/firestore";
-import firestorage from "firebase/storage";
+import { getStorage } from "firebase/storage";
 
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyAmiEd69xrOrg3ftBiZDV84RcaOT0-8oHA",
-  authDomain: "hybrid-robot-331519.firebaseapp.com",
-  projectId: "hybrid-robot-331519",
-  storageBucket: "hybrid-robot-331519.appspot.com",
-  messagingSenderId: "832190297656",
-  appId: "1:832190297656:web:3d1972c907505cbd1f98cd",
+  apiKey: "AIzaSyDrb8wioNx6cjjPsuG0klO8LorQQhNdrDo",
+  authDomain: "projct-c56a6.firebaseapp.com",
+  projectId: "projct-c56a6",
+  storageBucket: "projct-c56a6.appspot.com",
+  messagingSenderId: "1057662789405",
+  appId: "1:1057662789405:web:a9b9ff9013a1d6126d23f4",
 };
 
-firebase.initializeApp(firebaseConfig);
-
-export const firestore = firebase.firestor;
-export const storageRef = firebase.firestorage;
-export default { firebase };
+export const app = initializeApp(firebaseConfig);
+export const storage = getStorage();

@@ -25,10 +25,10 @@ const Creat_new_post = () => {
   const history = useHistory();
   const [classpost, setClasspost] = React.useState("");
   const [userloginID, setuserloginID] = useState();
-  const [hotelcard, setHotelcard] = useState();
-  const [AFScard, setAFScard] = useState();
-  const [AFRMcard, setAFRMcard] = useState();
-  const [AFRDcard, setAFRDcard] = useState();
+  // const [hotelcard, setHotelcard] = useState();
+  // const [AFScard, setAFScard] = useState();
+  // const [AFRMcard, setAFRMcard] = useState();
+  // const [AFRDcard, setAFRDcard] = useState();
 
   const options = [
     "Hotel",
@@ -107,7 +107,7 @@ const Creat_new_post = () => {
   return (
     <>
       <Navbar />
-      <button
+      {/* <button
         style={{ width: "5rem" }}
         onClick={async (e) => {
           e.preventDefault();
@@ -151,7 +151,7 @@ const Creat_new_post = () => {
         }}
       >
         See your card
-      </button>
+      </button> */}
       <div className="title">
         <h1>Creat new post </h1>
       </div>

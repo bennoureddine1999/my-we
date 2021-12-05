@@ -3,8 +3,9 @@ import "./App.css";
 import Navbar from "./component/VavBar/NavBar";
 import Slideshow from "./component/Slideshow/Slideshow";
 import Content from "./component/content/content";
-import Profile from "./component/profile/profile";
+import EditProfile from "./component/Editprofile/Editprofile";
 import Card from "./component/card/card";
+import Profile from "./component/profile/profile";
 import Details from "./component/details/details";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -23,13 +24,20 @@ function App() {
   const [date, setDate] = useState(null);
   const [day, setDay] = useState(null);
   const [Hotels, setHotels] = useState();
+  const [a_f_r_d, set_A_f_r_d] = useState();
+  const [a_f_r_m, set_A_f_r_m] = useState();
+  const [a_f_s, set_A_f_s] = useState();
+
   const [Laoding, setLoiding] = useState(true);
   const [Laoding2, setLaoding2] = useState(false);
   const [ERROR, setERROR] = useState(false);
-  const [search, setSearch] = useState(false);
+  const [search, setSearch] = useState();
   console.log("Hotels", Hotels);
   console.log("date", date);
   console.log("day", day);
+  console.log("a_f_r_d", a_f_r_d);
+  console.log("a_f_r_m", a_f_r_m);
+  console.log("a_f_s", a_f_s);
 
   console.log("Hotel", Hotel);
 
@@ -42,14 +50,20 @@ function App() {
             <Slideshow className="slideshow" />
             <Content
               setHotel={setHotel}
+              set_A_f_r_d={set_A_f_r_d}
+              set_A_f_r_m={set_A_f_r_m}
+              set_A_f_s={set_A_f_s}
               setDate={setDate}
               date={date}
               setDay={setDay}
-              setHotels={setHotels}
+              // setHotels={setHotels}
               setSearch={setSearch}
             />
-            <Image />
-            {search ? <Card hotel={Hotel} /> : false}
+            {/* <Image /> */}
+            <div style={{ display: "flex", flexWrap: "wrap" }}>
+              {/* {Hotel ? Hotel.map((hotel1) => <Card hotel={hotel1} />) : false} */}
+              {search ? search.map((item) => <Card hotel={item} />) : false}
+            </div>
           </Route>
           <Route exact path="/SignUp">
             <SignUp />
@@ -61,7 +75,10 @@ function App() {
           <Route exact path="/LogIn">
             <LogIn />
           </Route>
-          <Route exact path="/Profile">
+          <Route exact path="/Editprofile">
+            <EditProfile />
+          </Route>
+          <Route exact path="/profile">
             <Profile />
           </Route>
 

@@ -1,6 +1,8 @@
 import React from "react";
 import NavBar from "./NavBar.css";
+import axios from "axios";
 import { useHistory, useRouteMatch } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { LOGOUT } from "../../action/action";
 import Button from "@mui/material/Button";
@@ -18,9 +20,31 @@ const Navbar = () => {
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const userlogin = useSelector((state) => state.userlogin);
+
+  const email = userlogin.email;
+  const [profileImage, setProfileImage] = useState("");
+  console.log(email);
   // const handleChange = (event) => {
   //   props.setLogin(event.target.Boolean);
   // };
+
+  useEffect(() => {
+    const getdata = async () => {
+      try {
+        const users = await axios.post("http://localhost:7000/users/email", {
+          email,
+        });
+        const usersJS = users.data;
+        console.log(usersJS);
+        setProfileImage(usersJS.data.photo);
+
+        console.log("users:", usersJS);
+      } catch (error) {
+        console.log("error", error);
+      }
+    };
+    getdata();
+  }, []);
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -101,7 +125,7 @@ const Navbar = () => {
                   color="inherit"
                 >
                   {/* <AccountCircle /> */}
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+                  <Avatar alt="Remy Sharp" src={profileImage} />
                 </IconButton>
                 <Menu
                   id="menu-appbar"
@@ -123,7 +147,7 @@ const Navbar = () => {
                       history.push(`/Profile`);
                     }}
                   >
-                    Edit Profile
+                    Profile
                   </MenuItem>
                   <MenuItem
                     onClick={() => {

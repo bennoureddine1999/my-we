@@ -1,57 +1,95 @@
-import React from "react";
+import React, { useState } from "react";
 import card from "./card.css";
 import placelogo from "../../image/placeholder.png";
 import { useHistory, useRouteMatch } from "react-router-dom";
+import adresslogo from "../../image/placeholder.png";
+import pricelogo from "../../image/dollar.png";
+import { ellipsis } from "polished";
+import { TextField, Button } from "@material-ui/core";
 
 function Card(props) {
   const history = useHistory();
+  // console.log("images", props.hotel.photo);
 
   return (
     <div
       className="card"
       onClick={() => {
-        history.push(`/Details/${props.hotel[2]._id}`);
+        history.push(`/Details/${props.hotel._id}`);
       }}
     >
-      <div style={{ width: "20%" }}>name </div>
+      <div className="firstimgdiv">
+        <img
+          src={props.hotel.photo[0]}
+          style={{ width: "100%", maxHeight: "14rem" }}
+        />
+      </div>
       <div className="contentdiv">
-        <h1 style={{ fontSize: "1.9rem" }}>{props.hotel[2].title}</h1>
-        <div className="place">
+        <h1 className="titleh1">{props.hotel.title}</h1>
+        <div className="positiondiv">
+          <div className="positiondiv">
+            <img
+              src={adresslogo}
+              className="adressLogo"
+              style={{
+                filter:
+                  " invert(46%) sepia(27%) saturate(2633%) hue-rotate(195deg) brightness(98%) contrast(96%)",
+              }}
+            />
+            <p
+              style={{
+                marginLeft: "0.6rem",
+              }}
+            >
+              {props.hotel.province} ,
+            </p>
+            <p>{props.hotel.city}</p>
+          </div>
+        </div>
+        <div className="positiondiv" style={{ right: "0" }}>
           <img
-            src={placelogo}
-            className="placelogo"
-            style={{ marginLeft: "0.5rem" }}
+            src={pricelogo}
+            className="adressLogo"
+            style={{
+              // marginLeft: "7rem",
+              filter:
+                " invert(46%) sepia(27%) saturate(2633%) hue-rotate(195deg) brightness(98%) contrast(96%)",
+            }}
           />
-          <p className="placecontent">Province: {props.hotel[2].province}</p>
-          <p className="placecontent">,</p>
-          <p className="placecontent">City: {props.hotel[2].city}</p>
+          <p style={{ marginLeft: "0.6rem" }}>{props.hotel.prix} DA/day</p>
         </div>
         <div>
-          <p className="tagediv">{props.hotel[2].liste}</p>
-        </div>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            alignItems: "center",
-            marginTop: "1.7rem",
-          }}
-        >
-          <p style={{ color: "black" }}>Price :</p>
+          <p className="text">{props.hotel.content}</p>
           <p
             style={{
-              color: "red",
-              marginLeft: "0.8rem",
-              fontWeight: "700",
-              fontSize: "1.8rem",
+              color: "blue",
+              textDecoration: "underline ",
+              marginTop: "0rem",
+              marginBottom: "4rem",
+              // border: "solid 2px black",
+            }}
+            onClick={() => {
+              history.push(`/Details/${props.hotel._id}`);
             }}
           >
-            {" "}
-            {props.hotel[2].prix}{" "}
+            see more
           </p>
-          <p style={{ marginLeft: "0.8rem", color: "gray" }}>DZ</p>
         </div>
       </div>
+      <Button
+        variant="contained"
+        style={{
+          height: "3rem",
+          letterSpacing: "0.4rem",
+          alignContent: "center",
+          width: "100%",
+          position: "absolute",
+          bottom: "0",
+          borderTopLeftRadius: "20px",
+        }}
+      >
+        BooK Now{" "}
+      </Button>{" "}
     </div>
   );
 }

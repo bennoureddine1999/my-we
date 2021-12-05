@@ -295,12 +295,410 @@ function Content(props) {
                       const hotelsearch = response.data.data;
                       // props.setHotel(hotelsearch);
 
+                      // {
+                      //   Province === ""
+                      //     ? props.setHotel(hotelJson.data)
+                      //     : props.setHotel(hotelsearch);
+                      // }
+                      // props.setSearch(true);
                       {
                         Province === ""
-                          ? props.setHotel(hotelJson.data)
-                          : props.setHotel(hotelsearch);
+                          ? props.setSearch(hotelJson.data)
+                          : props.setSearch(hotelsearch);
                       }
-                      props.setSearch(true);
+
+                      setLaoding2(false);
+                      history.push("/");
+                    } catch (error) {
+                      setLaoding2(false);
+                      toast.error("users failed to create");
+                    }
+                  }}
+                >
+                  Search
+                </Button>
+              </Stack>
+            </div>
+          )}
+          {active === "Appartement for rent daily" && (
+            <div>
+              <Box
+                style={{
+                  width: "100%",
+                  marginLeft: "auto",
+                  marginRight: "auto",
+                }}
+                className="boxes"
+                component="form"
+                sx={{
+                  "& > :not(style)": { m: 1, width: "25ch" },
+                }}
+                noValidate
+                autoComplete="off"
+              >
+                <Autocomplete
+                  style={{
+                    width: "90%",
+                    marginLeft: "auto",
+                    marginRight: "auto",
+                  }}
+                  disablePortal
+                  id="combo-box-demo"
+                  options={province}
+                  sx={{ width: 300 }}
+                  onChange={(event, value) => {
+                    setProvince(value);
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      style={{ width: "100%%" }}
+                      {...params}
+                      label="Province"
+                    />
+                  )}
+                />
+              </Box>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <DatePicker
+                  label="Day"
+                  value={props.date}
+                  onChange={(newValue) => {
+                    props.setDate(newValue);
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      className="DatePicker"
+                      style={{
+                        marginLeft: "2rem",
+                        marginTop: "1rem",
+                        width: "45%",
+                      }}
+                    />
+                  )}
+                />
+              </LocalizationProvider>
+              <FormControl
+                sx={{ m: 1, width: "25ch" }}
+                variant="outlined"
+                style={{
+                  marginLeft: "3rem",
+                  marginTop: "1rem",
+                  width: "33%",
+                }}
+              >
+                <OutlinedInput
+                  id="outlined-adornment-weight"
+                  onChange={(e) => {
+                    props.setDay(e.target.value);
+                  }}
+                  endAdornment={
+                    <InputAdornment position="end">day</InputAdornment>
+                  }
+                  aria-describedby="outlined-weight-helper-text"
+                  inputProps={{
+                    "aria-label": "day",
+                  }}
+                />
+              </FormControl>
+              <Stack spacing={2} direction="row" className="button">
+                <Button
+                  variant="contained"
+                  type="submit"
+                  style={{ width: "100%", borderRadius: "10px" }}
+                  disabled={Laoding2}
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    setLaoding2(true);
+                    try {
+                      const response = await axios.post(
+                        "http://localhost:7000/AppartementForRent_D/search",
+                        {
+                          Province,
+                        }
+                      );
+                      const a_F_R_D = await fetch(
+                        "http://localhost:7000/AppartementForRent_D"
+                      );
+                      const a_F_R_DJson = await a_F_R_D.json();
+                      console.log("appartementForRentDJson", a_F_R_DJson);
+                      // props.setHotels(hotelJson.data);
+                      const a_F_R_Dsearch = response.data.data;
+                      // props.setHotel(hotelsearch);
+
+                      // {
+                      //   Province === ""
+                      //     ? props.set_A_f_r_d(a_F_R_DJson.data)
+                      //     : props.set_A_f_r_d(a_F_R_Dsearch);
+                      // }
+                      {
+                        Province === ""
+                          ? props.setSearch(a_F_R_DJson.data)
+                          : props.setSearch(a_F_R_Dsearch);
+                      }
+                      // props.setSearch(true);
+
+                      setLaoding2(false);
+                      history.push("/");
+                    } catch (error) {
+                      setLaoding2(false);
+                      toast.error("users failed to create");
+                    }
+                  }}
+                >
+                  Search
+                </Button>
+              </Stack>
+            </div>
+          )}
+          {active === "Appartement for rent monthly" && (
+            <div>
+              <Box
+                style={{
+                  width: "100%",
+                  marginLeft: "auto",
+                  marginRight: "auto",
+                }}
+                className="boxes"
+                component="form"
+                sx={{
+                  "& > :not(style)": { m: 1, width: "25ch" },
+                }}
+                noValidate
+                autoComplete="off"
+              >
+                <Autocomplete
+                  style={{
+                    width: "90%",
+                    marginLeft: "auto",
+                    marginRight: "auto",
+                  }}
+                  disablePortal
+                  id="combo-box-demo"
+                  options={province}
+                  sx={{ width: 300 }}
+                  onChange={(event, value) => {
+                    setProvince(value);
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      style={{ width: "100%%" }}
+                      {...params}
+                      label="Province"
+                    />
+                  )}
+                />
+              </Box>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <DatePicker
+                  label="Day"
+                  value={props.date}
+                  onChange={(newValue) => {
+                    props.setDate(newValue);
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      className="DatePicker"
+                      style={{
+                        marginLeft: "2rem",
+                        marginTop: "1rem",
+                        width: "45%",
+                      }}
+                    />
+                  )}
+                />
+              </LocalizationProvider>
+              <FormControl
+                sx={{ m: 1, width: "25ch" }}
+                variant="outlined"
+                style={{
+                  marginLeft: "3rem",
+                  marginTop: "1rem",
+                  width: "33%",
+                }}
+              >
+                <OutlinedInput
+                  id="outlined-adornment-weight"
+                  onChange={(e) => {
+                    props.setDay(e.target.value);
+                  }}
+                  endAdornment={
+                    <InputAdornment position="end">day</InputAdornment>
+                  }
+                  aria-describedby="outlined-weight-helper-text"
+                  inputProps={{
+                    "aria-label": "day",
+                  }}
+                />
+              </FormControl>
+              <Stack spacing={2} direction="row" className="button">
+                <Button
+                  variant="contained"
+                  type="submit"
+                  style={{ width: "100%", borderRadius: "10px" }}
+                  disabled={Laoding2}
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    setLaoding2(true);
+                    try {
+                      const response = await axios.post(
+                        "http://localhost:7000/AppartementForRent_M/search",
+                        {
+                          Province,
+                        }
+                      );
+                      const a_F_R_M = await fetch(
+                        "http://localhost:7000/AppartementForRent_M"
+                      );
+                      const a_F_R_MJson = await a_F_R_M.json();
+                      console.log("appartementForRentMJson", a_F_R_MJson);
+                      // props.setHotels(hotelJson.data);
+                      const a_F_R_Msearch = response.data.data;
+                      // props.setHotel(hotelsearch);
+
+                      // {
+                      //   Province === ""
+                      //     ? props.set_A_f_r_m(a_F_R_MJson.data)
+                      //     : props.set_A_f_r_m(a_F_R_Msearch);
+                      // }
+                      // props.setSearch(true);
+                      {
+                        Province === ""
+                          ? props.setSearch(a_F_R_MJson.data)
+                          : props.setSearch(a_F_R_Msearch);
+                      }
+
+                      setLaoding2(false);
+                      history.push("/");
+                    } catch (error) {
+                      setLaoding2(false);
+                      toast.error("users failed to create");
+                    }
+                  }}
+                >
+                  Search
+                </Button>
+              </Stack>
+            </div>
+          )}
+          {active === "Appartement for sale" && (
+            <div>
+              <Box
+                style={{
+                  width: "100%",
+                  marginLeft: "auto",
+                  marginRight: "auto",
+                }}
+                className="boxes"
+                component="form"
+                sx={{
+                  "& > :not(style)": { m: 1, width: "25ch" },
+                }}
+                noValidate
+                autoComplete="off"
+              >
+                <Autocomplete
+                  style={{
+                    width: "90%",
+                    marginLeft: "auto",
+                    marginRight: "auto",
+                  }}
+                  disablePortal
+                  id="combo-box-demo"
+                  options={province}
+                  sx={{ width: 300 }}
+                  onChange={(event, value) => {
+                    setProvince(value);
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      style={{ width: "100%%" }}
+                      {...params}
+                      label="Province"
+                    />
+                  )}
+                />
+              </Box>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <DatePicker
+                  label="Day"
+                  value={props.date}
+                  onChange={(newValue) => {
+                    props.setDate(newValue);
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      className="DatePicker"
+                      style={{
+                        marginLeft: "2rem",
+                        marginTop: "1rem",
+                        width: "45%",
+                      }}
+                    />
+                  )}
+                />
+              </LocalizationProvider>
+              <FormControl
+                sx={{ m: 1, width: "25ch" }}
+                variant="outlined"
+                style={{
+                  marginLeft: "3rem",
+                  marginTop: "1rem",
+                  width: "33%",
+                }}
+              >
+                <OutlinedInput
+                  id="outlined-adornment-weight"
+                  onChange={(e) => {
+                    props.setDay(e.target.value);
+                  }}
+                  endAdornment={
+                    <InputAdornment position="end">day</InputAdornment>
+                  }
+                  aria-describedby="outlined-weight-helper-text"
+                  inputProps={{
+                    "aria-label": "day",
+                  }}
+                />
+              </FormControl>
+              <Stack spacing={2} direction="row" className="button">
+                <Button
+                  variant="contained"
+                  type="submit"
+                  style={{ width: "100%", borderRadius: "10px" }}
+                  disabled={Laoding2}
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    setLaoding2(true);
+                    try {
+                      const response = await axios.post(
+                        "http://localhost:7000/AppartementForSale/search",
+                        {
+                          Province,
+                        }
+                      );
+                      const a_F_S = await fetch(
+                        "http://localhost:7000/AppartementForSale"
+                      );
+                      const a_F_SJson = await a_F_S.json();
+                      console.log("appartementForsale", a_F_SJson);
+                      // props.setHotels(hotelJson.data);
+                      const a_F_Ssearch = response.data.data;
+                      // props.setHotel(hotelsearch);
+
+                      // {
+                      //   Province === ""
+                      //     ? props.set_A_f_s(a_F_SJson.data)
+                      //     : props.set_A_f_s(a_F_Ssearch);
+                      // }
+                      // props.setSearch(true);
+                      {
+                        Province === ""
+                          ? props.setSearch(a_F_SJson.data)
+                          : props.setSearch(a_F_Ssearch);
+                      }
 
                       setLaoding2(false);
                       history.push("/");
